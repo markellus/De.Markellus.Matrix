@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\De.Markellus.Matrix.csproj" />
+    <ProjectReference Include="..\De.Markellus.Matrix\De.Markellus.Matrix.csproj" />
   </ItemGroup>
 
 </Project>

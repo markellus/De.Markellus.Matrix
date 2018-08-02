@@ -16,17 +16,18 @@
 // CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 // ****************************************************************************************
 using System;
+using System.Numerics;
 using NUnit.Framework;
 
 namespace De.Markellus.Matrix.Tests
 {
     [TestFixture]
-    public class Matrix
+    public class MatrixTest
     {
         [Test]
         public void TestMatrixCreation()
         {
-            Matrix<int> matrix = new Matrix<int>
+            Matrix matrix = new Matrix
             {
                 {1,2,3},
                 {4,5,6},
@@ -42,17 +43,17 @@ namespace De.Markellus.Matrix.Tests
             Assert.Throws<IndexOutOfRangeException>(() => matrix.GetColumn(-1));
             Assert.Throws<IndexOutOfRangeException>(() => matrix.GetColumn(4));
 
-            Assert.AreEqual(new Vector<int>() { 1, 2, 3 }, matrix[0], "Matrix row accessor is broken");
-            Assert.AreEqual(new Vector<int>() { 4, 5, 6 }, matrix[1], "Matrix row accessor is broken");
-            Assert.AreEqual(new Vector<int>() { 7, 8, 9 }, matrix[2], "Matrix row accessor is broken");
+            Assert.AreEqual(new Vector() { 1, 2, 3 }, matrix[0], "Matrix row accessor is broken");
+            Assert.AreEqual(new Vector() { 4, 5, 6 }, matrix[1], "Matrix row accessor is broken");
+            Assert.AreEqual(new Vector() { 7, 8, 9 }, matrix[2], "Matrix row accessor is broken");
 
-            Assert.AreEqual(new Vector<int>() { 1, 2, 3 }, matrix.GetRow(0), "Matrix row accessor is broken");
-            Assert.AreEqual(new Vector<int>() { 4, 5, 6 }, matrix.GetRow(1), "Matrix row accessor is broken");
-            Assert.AreEqual(new Vector<int>() { 7, 8, 9 }, matrix.GetRow(2), "Matrix row accessor is broken");
+            Assert.AreEqual(new Vector() { 1, 2, 3 }, matrix.GetRow(0), "Matrix row accessor is broken");
+            Assert.AreEqual(new Vector() { 4, 5, 6 }, matrix.GetRow(1), "Matrix row accessor is broken");
+            Assert.AreEqual(new Vector() { 7, 8, 9 }, matrix.GetRow(2), "Matrix row accessor is broken");
 
-            Assert.AreEqual(new Vector<int>() { 1, 4, 7 }, matrix.GetColumn(0), "Matrix column accessor is broken");
-            Assert.AreEqual(new Vector<int>() { 2, 5, 8 }, matrix.GetColumn(1), "Matrix column accessor is broken");
-            Assert.AreEqual(new Vector<int>() { 3, 6, 9 }, matrix.GetColumn(2), "Matrix column accessor is broken");
+            Assert.AreEqual(new Vector() { 1, 4, 7 }, matrix.GetColumn(0), "Matrix column accessor is broken");
+            Assert.AreEqual(new Vector() { 2, 5, 8 }, matrix.GetColumn(1), "Matrix column accessor is broken");
+            Assert.AreEqual(new Vector() { 3, 6, 9 }, matrix.GetColumn(2), "Matrix column accessor is broken");
 
             for (int row = 0; row < matrix.Rows; row++)
             {
@@ -66,7 +67,7 @@ namespace De.Markellus.Matrix.Tests
         [Test]
         public void TestMatrixCreationMissingMembers()
         {
-            Matrix<int> matrix = new Matrix<int>
+            Matrix matrix = new Matrix
             {
                 {1,2,3},
                 {4,5},
@@ -76,11 +77,11 @@ namespace De.Markellus.Matrix.Tests
             Assert.AreEqual(3, matrix.Columns, "Column count is wrong");
             Assert.AreEqual(3, matrix.Rows, "Row count is wrong");
 
-            Assert.AreEqual(matrix[0], new Vector<int>() { 1, 2, 3 }, "Matrix row accessor is broken");
-            Assert.AreEqual(matrix[1], new Vector<int>() { 4, 5, 0 }, "Matrix row accessor is broken");
-            Assert.AreEqual(matrix[2], new Vector<int>() { 7, 8, 9 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[0], new Vector() { 1, 2, 3 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[1], new Vector() { 4, 5, 0 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[2], new Vector() { 7, 8, 9 }, "Matrix row accessor is broken");
 
-            matrix = new Matrix<int>
+            matrix = new Matrix
             {
                 {1,2},
                 {4,5,0},
@@ -91,10 +92,10 @@ namespace De.Markellus.Matrix.Tests
             Assert.AreEqual(3, matrix.Columns, "Column count is wrong");
             Assert.AreEqual(4, matrix.Rows, "Row count is wrong");
 
-            Assert.AreEqual(matrix[0], new Vector<int>() { 1, 2, 0 }, "Matrix row accessor is broken");
-            Assert.AreEqual(matrix[1], new Vector<int>() { 4, 5, 0 }, "Matrix row accessor is broken");
-            Assert.AreEqual(matrix[2], new Vector<int>() { 7, 8, 9 }, "Matrix row accessor is broken");
-            Assert.AreEqual(matrix[3], new Vector<int>() { 0, 0, 0 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[0], new Vector() { 1, 2, 0 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[1], new Vector() { 4, 5, 0 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[2], new Vector() { 7, 8, 9 }, "Matrix row accessor is broken");
+            Assert.AreEqual(matrix[3], new Vector() { 0, 0, 0 }, "Matrix row accessor is broken");
         }
     }
 }

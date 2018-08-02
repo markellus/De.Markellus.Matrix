@@ -25,7 +25,7 @@ namespace De.Markellus.Matrix
     /// This class represents a dynamic matrix of any dimension.
     /// The implementation is not mathematically correct, but who cares if the results are the same?
     /// </summary>
-    public class Matrix<T> : IEnumerable<T> where T: IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
+    public class Matrix : IEnumerable<double>
     {
         #region Variables
 
@@ -38,7 +38,7 @@ namespace De.Markellus.Matrix
         /// <summary>
         /// The matrix is built from vectors. Each vector represents a single row of the matrix.
         /// </summary>
-        private List<Vector<T>> _listVecRows;
+        private List<Vector> _listVecRows;
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace De.Markellus.Matrix
         /// <param name="column">The column of the wanted element</param>
         /// <param name="row">The row of the wanted element</param>
         /// <returns>The matrix element</returns>
-        public T this[int column, int row]
+        public double this[int column, int row]
         {
             get => GetRow(row)[column];
 
@@ -78,7 +78,7 @@ namespace De.Markellus.Matrix
                         {
                             for (int j = this[i].Dimensions; j <= column; j++)
                             {
-                                this[i][j] = default(T);
+                                this[i][j] = default(double);
                             }
                         }
                     }
@@ -96,9 +96,9 @@ namespace De.Markellus.Matrix
         /// </summary>
         /// <param name="row">The row of the wanted element</param>
         /// <returns>A vector representing the a row of the matrix</returns>
-        public Vector<T> this[int row] => GetRow(row);
+        public Vector this[int row] => GetRow(row);
 
-        public Vector<T> GetRow(int row)
+        public Vector GetRow(int row)
         {
             if (this.Rows <= row || row < 0)
             {
@@ -107,14 +107,14 @@ namespace De.Markellus.Matrix
             return _listVecRows[row];
         }
 
-        public Vector<T> GetColumn(int column)
+        public Vector GetColumn(int column)
         {
             if (this.Columns <= column || column < 0)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            Vector<T> vecColumn = new Vector<T>(Columns);
+            Vector vecColumn = new Vector(Columns);
 
             for (int i = 0; i < Columns; i++)
             {
@@ -127,12 +127,12 @@ namespace De.Markellus.Matrix
 
         public Matrix()
         {
-            _listVecRows = new List<Vector<T>>();
+            _listVecRows = new List<Vector>();
         }
 
         #region IEnumerable Implementation
 
-        public void Add(params T[] row)
+        public void Add(params double[] row)
         {
             int rowCurrent = this.Rows;
 
@@ -142,9 +142,9 @@ namespace De.Markellus.Matrix
             }
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<double> GetEnumerator()
         {
-            return new MatrixEnumerator<T>(this);
+            return new MatrixEnumerator(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -153,11 +153,11 @@ namespace De.Markellus.Matrix
         }
 
         #endregion
-        private void AddVector(ref List<Vector<T>> listVectors,  int pos)
+        private void AddVector(ref List<Vector> listVectors,  int pos)
         {
             for (int i = listVectors.Count; i <= pos; i++)
             {
-                listVectors.Add(new Vector<T>(_iLongestRow));
+                listVectors.Add(new Vector(_iLongestRow));
             }
         }
     }

@@ -22,13 +22,13 @@ using System.Text;
 
 namespace De.Markellus.Matrix
 {
-    public class VectorEnumerator<T> : IEnumerator<T> where T : IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
+    public class VectorEnumerator : IEnumerator<double>
     {
-        private Vector<T> _vector;
+        private Vector _vector;
 
         private int _position = -1;
 
-        public VectorEnumerator(Vector<T> vector)
+        public VectorEnumerator(Vector vector)
         {
             _vector = vector;
         }
@@ -44,7 +44,7 @@ namespace De.Markellus.Matrix
             _position = -1;
         }
 
-        public T Current => _vector[_position];
+        public double Current => _vector[_position];
 
         object IEnumerator.Current => Current;
 

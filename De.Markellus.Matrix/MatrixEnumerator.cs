@@ -22,9 +22,9 @@ using System.Text;
 
 namespace De.Markellus.Matrix
 {
-    public class MatrixEnumerator<T> : IEnumerator<T> where T : IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
+    public class MatrixEnumerator : IEnumerator<double>
     {
-        public MatrixEnumerator(Matrix<T> matrix)
+        public MatrixEnumerator(Matrix matrix)
         {
             throw new NotImplementedException("Enumerating over a matrix is not yet supported.");
         }
@@ -39,7 +39,7 @@ namespace De.Markellus.Matrix
             throw new NotImplementedException();
         }
 
-        public T Current { get; }
+        public double Current { get; }
 
         object IEnumerator.Current => Current;
 

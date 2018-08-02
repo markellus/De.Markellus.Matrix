@@ -25,13 +25,19 @@ namespace De.Markellus.Matrix
     /// <summary>
     /// This class represents a vector of any dimension.
     /// </summary>
-    public class Vector<T> : IEnumerable<T> where T : IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
+    public class Vector : IEnumerable<double>
     { 
-        private List<T> _listDimensions;
+        /// <summary>
+        /// The dimensions of the vector
+        /// </summary>
+        private List<double> _listDimensions;
 
+        /// <summary>
+        /// Returns the number of dimensions
+        /// </summary>
         public int Dimensions => _listDimensions.Count;
 
-        public T this[int index]
+        public double this[int index]
         {
             get => _listDimensions[index];
 
@@ -41,7 +47,7 @@ namespace De.Markellus.Matrix
                 {
                     for (int i = Dimensions; Dimensions < index; i++)
                     {
-                        _listDimensions.Add(default(T));
+                        _listDimensions.Add(default(double));
                     }
                     _listDimensions.Add(value);
                 }
@@ -50,9 +56,80 @@ namespace De.Markellus.Matrix
             }
         }
 
+        public static Vector operator +(Vector vec1, Vector vec2)
+        {
+            if (vec1.Dimensions != vec2.Dimensions)
+            {
+                throw new Exception();//TODO: Add exceptions when math stuff fails in Vector/Matrix
+            }
+            Vector vecNew = new Vector();
+
+            for (int i = 0; i < vec1.Dimensions; i++)
+            {
+                vecNew[i] = vec1[i] + vec2[i];
+            }
+
+            return vecNew;
+        }
+
+        public static Vector operator -(Vector vec1, Vector vec2)
+        {
+            if (vec1.Dimensions != vec2.Dimensions)
+            {
+                throw new Exception();//TODO: Add exceptions when math stuff fails in Vector/Matrix
+            }
+            Vector vecNew = new Vector();
+
+            for (int i = 0; i < vec1.Dimensions; i++)
+            {
+                vecNew[i] = vec1[i] - vec2[i];
+            }
+
+            return vecNew;
+        }
+
+        public static double operator *(Vector vec1, Vector vec2)
+        {
+            if (vec1.Dimensions != vec2.Dimensions)
+            {
+                throw new Exception();//TODO: Add exceptions when math stuff fails in Vector/Matrix
+            }
+
+            double dResult = 0;
+
+            for (int i = 0; i < vec1.Dimensions; i++)
+            {
+                dResult += vec1[i] * vec2[i];
+            }
+
+            return dResult;
+        }
+
+        public static Vector operator *(Vector vec1, double dScalar)
+        {
+            Vector vecNew = new Vector();
+
+            for (int i = 0; i < vec1.Dimensions; i++)
+            {
+                vecNew[i] = vec1[i] * dScalar;
+            }
+
+            return vecNew;
+        }
+
+        public static Vector operator *(double dScalar, Vector vec1)
+        {
+            return vec1 * dScalar;
+        }
+
+        public static Vector operator /(Vector vec1, double dScalar)
+        {
+            return vec1 * (1.0 / dScalar);
+        }
+
         public Vector()
         {
-            _listDimensions = new List<T>();
+            _listDimensions = new List<double>();
         }
 
         public Vector(int dimensions) : this()
@@ -64,18 +141,78 @@ namespace De.Markellus.Matrix
 
             if (dimensions > 0)
             {
-                this[dimensions-1] = default(T);
+                this[dimensions-1] = default(double);
             }
         }
 
-        public void Add(T obj)
+        public double DistanceSquared(Vector vecOther)
+        {
+            if (this.Dimensions != vecOther.Dimensions)
+            {
+                throw new Exception();//TODO: Add exceptions when math stuff fails in Vector/Matrix
+            }
+
+            double dTotal = 0;
+
+            for (int i = 0; i < this.Dimensions; i++)
+            {
+                dTotal += Math.Pow(this[i] - vecOther[i], 2);
+            }
+
+            return dTotal;
+        }
+
+        public double Distance(Vector vecOther)
+        {
+            return Math.Sqrt(DistanceSquared(vecOther));
+        }
+
+        public double LengthSquared()
+        {
+            double dResult = 0;
+
+            for (int i = 0; i < this.Dimensions; i++)
+            {
+                dResult += Math.Pow(this[i], 2);
+            }
+
+            return dResult;
+        }
+
+        public double Length()
+        {
+            return Math.Sqrt(LengthSquared());
+        }
+
+        /// <summary>
+        /// Checks if the given vector "stands" on this one (90 degrees between both vectors)
+        /// </summary>
+        /// <param name="vecOther">The other vector</param>
+        /// <param name="dDelta">Error margin</param>
+        /// <returns></returns>
+        public bool IsOrthogonalTo(Vector vecOther, double dDelta = 0.000000001)
+        {
+            return Math.Abs(this * vecOther) < dDelta;
+        }
+
+        public Vector OrthogonalProjection(Vector vecOnto)
+        {
+            return (this * vecOnto) / LengthSquared() * this;
+        }
+
+        public void SetToLength(double length)
+        {
+            this._listDimensions = (this / Length() * length)._listDimensions;
+        }
+
+        public void Add(double obj)
         {
             this[Dimensions] = obj;
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<double> GetEnumerator()
         {
-            return new VectorEnumerator<T>(this);
+            return new VectorEnumerator(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

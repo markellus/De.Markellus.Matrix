@@ -69,5 +69,24 @@ namespace De.Markellus.Matrix.Tests
 
             Assert.AreEqual(vec1.OrthogonalProjection(vec2), new Vector{-28.0/9, 28.0/9, -14.0/9});
         }
+
+        [Test]
+        public void TestCrossProduct()
+        {
+            Vector vec1 = new Vector { 1, 2, 3 };
+            Vector vec2 = new Vector { -2, 1, -1 };
+
+            Assert.AreEqual(vec1.CrossProduct(vec2), new Vector {-5, -5, 5});
+        }
+
+        [Test]
+        public void TestIsCollinearTo()
+        {
+            Vector vec1 = new Vector { 1, 0, 0 };
+            Vector vec2 = new Vector { -1, 0, 0 };
+            Assert.IsTrue(vec1.IsCollinearTo(vec2));
+
+
+        }
     }
 }

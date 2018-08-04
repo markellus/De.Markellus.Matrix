@@ -18,7 +18,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace De.Markellus.Matrix
 {
@@ -26,7 +25,13 @@ namespace De.Markellus.Matrix
     /// This class represents a vector of any dimension.
     /// </summary>
     public class Vector : IEnumerable<double>
-    { 
+    {
+        private const double PRECISION = 0.00000000001;
+
+        public static readonly Vector Vector1Zero = new Vector {0};
+        public static readonly Vector Vector2Zero = new Vector {0, 0};
+        public static readonly Vector Vector3Zero = new Vector {0, 0, 0};
+
         /// <summary>
         /// The dimensions of the vector
         /// </summary>
@@ -190,7 +195,7 @@ namespace De.Markellus.Matrix
         /// <param name="vecOther">The other vector</param>
         /// <param name="dDelta">Error margin</param>
         /// <returns></returns>
-        public bool IsOrthogonalTo(Vector vecOther, double dDelta = 0.000000001)
+        public bool IsOrthogonalTo(Vector vecOther, double dDelta = PRECISION)
         {
             return Math.Abs(this * vecOther) < dDelta;
         }
@@ -198,6 +203,26 @@ namespace De.Markellus.Matrix
         public Vector OrthogonalProjection(Vector vecOnto)
         {
             return (this * vecOnto) / LengthSquared() * this;
+        }
+
+        public Vector CrossProduct(Vector vecOther)
+        {
+            if (this.Dimensions != 3 || vecOther.Dimensions != 3)
+            {
+                throw new Exception();//TODO: Add exceptions when math stuff fails in Vector/Matrix
+            }
+
+            return new Vector
+            {
+                this[1] * vecOther[2] - this[2] * vecOther[1],
+                this[2] * vecOther[0] - this[0] * vecOther[2],
+                this[0] * vecOther[1] - this[1] * vecOther[0]
+            };
+        }
+
+        public bool IsCollinearTo(Vector vecOther)
+        {
+            return this.CrossProduct(vecOther).Equals(Vector3Zero);
         }
 
         public void SetToLength(double length)
@@ -208,6 +233,23 @@ namespace De.Markellus.Matrix
         public void Add(double obj)
         {
             this[Dimensions] = obj;
+        }
+
+        public override bool Equals(object obj)
+        {
+            Vector vecOther = (Vector) obj;
+
+            if (vecOther == null || this.Dimensions != vecOther.Dimensions)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < this.Dimensions; i++)
+            {
+                if (Math.Abs(this[i] - vecOther[i]) > PRECISION) return false;
+            }
+
+            return true;
         }
 
         public IEnumerator<double> GetEnumerator()

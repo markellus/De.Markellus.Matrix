@@ -75,8 +75,38 @@ namespace De.Markellus.Matrix.Tests
         {
             Vector vec1 = new Vector { 1, 2, 3 };
             Vector vec2 = new Vector { -2, 1, -1 };
+            Vector vecCross = vec1.CrossProduct(vec2);
 
-            Assert.AreEqual(vec1.CrossProduct(vec2), new Vector {-5, -5, 5});
+            Assert.AreEqual(vecCross, new Vector {-5, -5, 5});
+            Assert.IsTrue(vec1.IsOrthogonalTo(vecCross));
+            Assert.IsTrue(vec2.IsOrthogonalTo(vecCross));
+
+            vec1 = new Vector { 0, 1, 1 };
+            vec2 = new Vector { 1, -1, 0 };
+            vecCross = vec1.CrossProduct(vec2);
+
+            Assert.AreEqual(vecCross, new Vector { 1, 1, -1 });
+            Assert.IsTrue(vec1.IsOrthogonalTo(vecCross));
+            Assert.IsTrue(vec2.IsOrthogonalTo(vecCross));
+
+            vec1 = new Vector { 1, 2, -3 };
+            vec2 = new Vector { 3, -1, 1 };
+            vecCross = vec1.CrossProduct(vec2);
+
+            Assert.AreEqual(vecCross, new Vector { -1, -10, -7 });
+            Assert.IsTrue(vec1.IsOrthogonalTo(vecCross));
+            Assert.IsTrue(vec2.IsOrthogonalTo(vecCross));
+
+            vec1 = new Vector { 0, 1, 1 };
+            vec2 = new Vector { 1, -1, 0 };
+            vecCross = vec1.CrossProduct(vec2);
+            double dEucl = vecCross.Length();
+
+            Assert.AreEqual(dEucl, Math.Sqrt(3), 0.00001);
+            Assert.AreEqual(vecCross, new Vector { 1, 1, -1 });
+            Assert.AreEqual(vecCross / dEucl, new Vector() {1 / Math.Sqrt(3), 1 / Math.Sqrt(3), -1 / Math.Sqrt(3)});
+            Assert.IsTrue(vec1.IsOrthogonalTo(vecCross));
+            Assert.IsTrue(vec2.IsOrthogonalTo(vecCross));
         }
 
         [Test]
@@ -86,7 +116,43 @@ namespace De.Markellus.Matrix.Tests
             Vector vec2 = new Vector { -1, 0, 0 };
             Assert.IsTrue(vec1.IsCollinearTo(vec2));
 
+            vec1 = new Vector { 1, 4, -32 };
+            vec2 = new Vector { 25, 100, -800 };
+            Assert.IsTrue(vec1.IsCollinearTo(vec2));
 
+            vec1 = new Vector { 1, 4, -32 };
+            vec2 = new Vector { -25, -100, 800 };
+            Assert.IsTrue(vec1.IsCollinearTo(vec2));
+
+            vec1 = new Vector { 1, 4, 1 };
+            vec2 = new Vector { -2, 2, -3 };
+            Assert.IsFalse(vec1.IsCollinearTo(vec2));
+
+            Vector vecCross = vec1.CrossProduct(vec2);
+            double t = vecCross * new Vector() {0, 0, 0};
+
+            vec1 = new Vector { 3, 2, 1 };
+            vec2 = new Vector { 7, -2, 3 };
+            Assert.IsFalse(vec1.IsCollinearTo(vec2));
+        }
+
+        [Test]
+        public void TestAngleBetween()
+        {
+            Vector vec1 = new Vector {2, 3};
+            Vector vec2 = new Vector {5, -7};
+
+            Assert.AreEqual(vec1.AngleBetween(vec2).GetRadian(), Math.Acos(-11 / Math.Sqrt(13*74)), 0.00001);
+        }
+
+        [Test]
+        public void Combined1()
+        {
+            Vector vec1 = new Vector { 2, 1, 1 };
+            Vector vec2 = new Vector { 1,-1, 4 };
+
+            Assert.AreEqual((vec1 + 2 * vec2).Length(), 7 * Math.Sqrt(2), 0.00001);
+            Assert.AreEqual((vec1 + vec2).AngleBetween(vec1 - vec2).GetRadian(), Math.Acos(-12 / (2 * Math.Sqrt(119))));
         }
     }
 }

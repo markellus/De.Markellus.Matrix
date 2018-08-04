@@ -18,6 +18,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace De.Markellus.Matrix
 {
@@ -222,7 +224,29 @@ namespace De.Markellus.Matrix
 
         public bool IsCollinearTo(Vector vecOther)
         {
-            return this.CrossProduct(vecOther).Equals(Vector3Zero);
+            if (this.Dimensions != vecOther.Dimensions)
+            {
+                throw new Exception();//TODO: Add exceptions when math stuff fails in Vector/Matrix
+            }
+            
+            if (this.Dimensions == 1) return true;
+
+            double dLambda = Double.NaN;
+
+            for (int i = 0; i < this.Dimensions; i++)
+            {
+                double dLambdaI = this[i] / vecOther[i];
+
+                if (double.IsNaN(dLambda)) dLambda = dLambdaI;
+                else if (Math.Abs(dLambdaI - dLambda) > PRECISION) return false;
+            }
+
+            return true;
+        }
+
+        public Angle AngleBetween(Vector vecOther)
+        {
+            return new Angle(Math.Acos((this * vecOther) / (this.Length() * vecOther.Length())));
         }
 
         public void SetToLength(double length)

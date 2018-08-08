@@ -25,7 +25,7 @@ namespace De.Markellus.Matrix
     /// This class represents a dynamic matrix of any dimension.
     /// The implementation is not mathematically correct, but who cares if the results are the same?
     /// </summary>
-    public class Matrix : IEnumerable<double>
+    public class Matrix : IEnumerable<Vector>
     {
         #region Variables
 
@@ -98,6 +98,7 @@ namespace De.Markellus.Matrix
         /// <returns>A vector representing the a row of the matrix</returns>
         public Vector this[int row] => GetRow(row);
 
+
         public Vector GetRow(int row)
         {
             if (this.Rows <= row || row < 0)
@@ -114,9 +115,9 @@ namespace De.Markellus.Matrix
                 throw new IndexOutOfRangeException();
             }
 
-            Vector vecColumn = new Vector(Columns);
+            Vector vecColumn = new Vector(this.Rows);
 
-            for (int i = 0; i < Columns; i++)
+            for (int i = 0; i < this.Rows; i++)
             {
                 vecColumn[i] = _listVecRows[i][column];
             }
@@ -130,8 +131,6 @@ namespace De.Markellus.Matrix
             _listVecRows = new List<Vector>();
         }
 
-        #region IEnumerable Implementation
-
         public void Add(params double[] row)
         {
             int rowCurrent = this.Rows;
@@ -142,7 +141,38 @@ namespace De.Markellus.Matrix
             }
         }
 
-        public IEnumerator<double> GetEnumerator()
+        public void SwapRows(int iFirst, int iSecond)
+        {
+            Vector vecFirst = _listVecRows[iFirst];
+            _listVecRows[iFirst] = _listVecRows[iSecond];
+            _listVecRows[iSecond] = vecFirst;
+        }
+
+        public void DeleteRow(int iRow)
+        {
+            _listVecRows.RemoveAt(iRow);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Matrix matOther = (Matrix)obj;
+
+            if (matOther == null || this.Columns != matOther.Columns || this.Rows != matOther.Rows)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                if (!this.GetRow(i).Equals(matOther.GetRow(i))) return false;
+            }
+
+            return true;
+        }
+
+        #region IEnumerable Implementation
+
+        public IEnumerator<Vector> GetEnumerator()
         {
             return new MatrixEnumerator(this);
         }
@@ -159,6 +189,17 @@ namespace De.Markellus.Matrix
             {
                 listVectors.Add(new Vector(_iLongestRow));
             }
+        }
+
+        public override string ToString()
+        {
+            string strResult = "";
+            for (int i = 0; i < this.Rows; i++)
+            {
+                strResult += this.GetRow(i) + Environment.NewLine;
+            }
+
+            return strResult;
         }
     }
 }

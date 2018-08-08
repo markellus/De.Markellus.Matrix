@@ -22,30 +22,34 @@ using System.Text;
 
 namespace De.Markellus.Matrix
 {
-    public class MatrixEnumerator : IEnumerator<double>
+    public class MatrixEnumerator : IEnumerator<Vector>
     {
+        private Matrix _matrix;
+
+        private int _position = -1;
+
         public MatrixEnumerator(Matrix matrix)
         {
-            throw new NotImplementedException("Enumerating over a matrix is not yet supported.");
+            _matrix = matrix;
         }
 
         public bool MoveNext()
         {
-            throw new NotImplementedException();
+            _position++;
+            return _position < _matrix.Rows;
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            _position = -1;
         }
 
-        public double Current { get; }
+        public Vector Current => _matrix[_position];
 
         object IEnumerator.Current => Current;
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -50,6 +50,9 @@ namespace De.Markellus.Matrix
 
             set
             {
+
+                if (Math.Abs(value) < PRECISION) value = 0;
+
                 if (index >= Dimensions)
                 {
                     for (int i = Dimensions; Dimensions < index; i++)
@@ -261,7 +264,7 @@ namespace De.Markellus.Matrix
 
         public override bool Equals(object obj)
         {
-            Vector vecOther = (Vector) obj;
+            Vector vecOther = (Vector)obj;
 
             if (vecOther == null || this.Dimensions != vecOther.Dimensions)
             {
@@ -284,6 +287,17 @@ namespace De.Markellus.Matrix
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            string strResult = "";
+            for (int i = 0; i < this.Dimensions; i++)
+            {
+                strResult += this[i].ToString("F5") + " ";
+            }
+
+            return strResult;
         }
     }
 }
